@@ -30,12 +30,15 @@ object Consumer {
   }
 
   def main(args: Array[String]) {
-    val topic = "tracking"
+    val topic = if(args.length > 0) args(0) else "tracking"
+    val zookeeper = if(args.length > 1) args(1) else "localhost:2181"
+
+    println(s"Topic: ${topic}, Zookeeper: ${zookeeper}")
 
     val props = new Properties()
 
     props.put("group.id", "bruno_consumer_1234")
-    props.put("zookeeper.connect", "localhost:2181")
+    props.put("zookeeper.connect", zookeeper)
     props.put("auto.offset.reset", "largest")
 
     val config = new ConsumerConfig(props)
