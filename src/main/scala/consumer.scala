@@ -11,7 +11,7 @@ import org.msgpack.MessagePack
 import scala.collection.mutable.HashMap
 
 object Consumer {
-  def unpack(messageAndMetadata: MessageAndMetadata[Array[Byte], Array[Byte]]) = {
+  def unpack(messageAndMetadata: MessageAndMetadata[Array[Byte], Array[Byte]]): HashMap[String, Any] = {
     val unpackedMessage: HashMap[String, Any] = new HashMap
 
     val unpacked = MessagePack.unpack(messageAndMetadata.message)
@@ -29,7 +29,7 @@ object Consumer {
     unpackedMessage
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val topic = if(args.length > 0) args(0) else "tracking"
     val zookeeper = if(args.length > 1) args(1) else "localhost:2181"
 
