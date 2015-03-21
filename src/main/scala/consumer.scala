@@ -11,10 +11,12 @@ import org.msgpack.MessagePack
 import scala.collection.mutable.HashMap
 
 object Consumer {
+  val messagePack = new MessagePack()
+
   def unpack(messageAndMetadata: MessageAndMetadata[Array[Byte], Array[Byte]]): HashMap[String, Any] = {
     val unpackedMessage: HashMap[String, Any] = new HashMap
 
-    val unpacked = MessagePack.unpack(messageAndMetadata.message)
+    val unpacked = messagePack.read(messageAndMetadata.message)
     for (entry <- unpacked.asMapValue.entrySet) {
       val value: Any = entry.getValue match {
         case v if v.isBooleanValue => v.asBooleanValue
