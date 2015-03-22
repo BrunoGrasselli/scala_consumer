@@ -10,3 +10,4 @@
 * Create filters
 * Parse file with configurations by environment
 * Fix warning messages about log4j
+* Better way to parse cli options
