@@ -12,12 +12,15 @@ object Consumer {
   def main(args: Array[String]): Unit = {
     val topic = if(args.length > 0) args(0) else "tracking"
     val zookeeper = if(args.length > 1) args(1) else "localhost:2181"
+    val group_id = "bruno_consumer_1234"
 
     println(s"Topic: ${topic}, Zookeeper: ${zookeeper}")
 
     val props = new Properties()
 
-    props.put("group.id", "bruno_consumer_1234")
+    ZkUtils.maybeDeletePath(zookeeper, s"/consumers/${group_id}");
+
+    props.put("group.id", group_id)
     props.put("zookeeper.connect", zookeeper)
     props.put("auto.offset.reset", "largest")
 
