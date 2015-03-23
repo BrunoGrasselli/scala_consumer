@@ -1,35 +1,13 @@
 package grasselli.scala_kafka
 
-import kafka.message._
 import kafka.consumer._
 import kafka.serializer._
 import kafka.utils._
 import java.util.Properties
 import kafka.utils.Logging
 import scala.collection.JavaConversions._
-import org.msgpack.MessagePack
-import scala.collection.mutable.HashMap
 
 object Consumer {
-  val messagePack = new MessagePack()
-
-  def unpack(messageAndMetadata: MessageAndMetadata[Array[Byte], Array[Byte]]): HashMap[String, Any] = {
-    val unpackedMessage: HashMap[String, Any] = new HashMap
-
-    val unpacked = messagePack.read(messageAndMetadata.message)
-    for (entry <- unpacked.asMapValue.entrySet) {
-      val value: Any = entry.getValue match {
-        case v if v.isBooleanValue => v.asBooleanValue
-        case v if v.isIntegerValue => v.asIntegerValue
-        case v if v.isFloatValue => v.asFloatValue
-        case v if v.isRawValue => v.asRawValue.getString
-        case v => None
-      }
-      unpackedMessage.put(entry.getKey.asRawValue.getString, value)
-    }
-
-    unpackedMessage
-  }
 
   def main(args: Array[String]): Unit = {
     val topic = if(args.length > 0) args(0) else "tracking"
@@ -52,7 +30,7 @@ object Consumer {
     val stream = connector.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder()).get(0)
 
     for (messageAndMetadata <- stream) {
-      println(unpack(messageAndMetadata))
+      println(MessagePackSerialization.unpack(messageAndMetadata))
     }
   }
 }
