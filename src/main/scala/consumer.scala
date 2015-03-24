@@ -12,6 +12,7 @@ object Consumer {
   def main(args: Array[String]): Unit = {
     val topic = if(args.length > 0) args(0) else "tracking"
     val zookeeper = if(args.length > 1) args(1) else "localhost:2181"
+    val max_messages = if(args.length > 2) args(2).toInt else 0
     val group_id = "bruno_consumer_1234"
 
     println(s"Topic: ${topic}, Zookeeper: ${zookeeper}")
@@ -32,8 +33,14 @@ object Consumer {
 
     val stream = connector.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder()).get(0)
 
+    var message_count = 0
     for (messageAndMetadata <- stream) {
-      println(MessagePackSerialization.unpack(messageAndMetadata))
+      message_count = message_count + 1
+      if (max_messages > 0 && message_count > max_messages) {
+        connector.shutdown()
+      } else {
+        println(MessagePackSerialization.unpack(messageAndMetadata))
+      }
     }
   }
 }
