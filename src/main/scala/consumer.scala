@@ -24,6 +24,7 @@ object Consumer {
     props.put("group.id", group_id)
     props.put("zookeeper.connect", zookeeper)
     props.put("auto.offset.reset", "largest")
+    props.put("auto.commit.enable", "false")
 
     val config = new ConsumerConfig(props)
 
