@@ -26,4 +26,23 @@ object MessagePackSerialization {
     unpackedMessage
   }
 
+  def unpack(messageAndOffset: MessageAndOffset): HashMap[String, Any] = {
+    val unpackedMessage: HashMap[String, Any] = new HashMap
+
+    val unpacked = messagePack.read(messageAndOffset.message.payload)
+
+    for (entry <- unpacked.asMapValue.entrySet) {
+      val value: Any = entry.getValue match {
+        case v if v.isBooleanValue => v.asBooleanValue
+        case v if v.isIntegerValue => v.asIntegerValue
+        case v if v.isFloatValue => v.asFloatValue
+        case v if v.isRawValue => v.asRawValue.getString
+        case v => None
+      }
+      unpackedMessage.put(entry.getKey.asRawValue.getString, value)
+    }
+
+    unpackedMessage
+  }
+
 }
