@@ -13,6 +13,7 @@ class PartitionReader(brokers: List[String], port: Integer) {
   def findOffset(topic: String, partition: Integer, time: DateTime): Long = {
     val timestamp : Long = time.getMillis / 1000
 
+    @annotation.tailrec
     def x(offset_1: Long, offset_2: Long): Long = {
       val first = getTimestampAndOffset(offset_1, topic, partition)
       val last = getTimestampAndOffset(offset_2, topic, partition)
