@@ -17,11 +17,9 @@ class PartitionReader(brokers: List[String], port: Integer) {
     def x(offset_1: Long, offset_2: Long): Long = {
       val first = getTimestampAndOffset(offset_1, topic, partition)
       val last = getTimestampAndOffset(offset_2, topic, partition)
-      val new_offset = (first._2 + last._2) / 2
-      val middle = getTimestampAndOffset(new_offset, topic, partition)
+      val middle = getTimestampAndOffset((first._2 + last._2) / 2, topic, partition)
 
       if(last._2 - first._2 == 1) {
-        println(first._1)
         first._2
       } else if(timestamp > middle._1) {
         x(middle._2, last._2)
