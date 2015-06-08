@@ -2,7 +2,7 @@
 
 ## Usage
 
-```sbt "run topic_name localhost:2181"```
+```sbt "run tracking_test kafka01.local0 appid 11176 10000"```
 
 ## Todo list
 

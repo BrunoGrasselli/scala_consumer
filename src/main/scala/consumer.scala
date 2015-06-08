@@ -18,16 +18,16 @@ class Config(args: Array[String]) {
     if(config_string.length > 1) config_string(1) else "localhost:2181"
   }
 
-  def maxMessages() : Int = {
-    if(config_string.length > 2) config_string(2).toInt else 0
-  }
-
   def filterKey() : Option[String] = {
-    if(config_string.length > 3) Some(config_string(3)) else None
+    if(config_string.length > 2) Some(config_string(2)) else None
   }
 
   def filterValue() : Option[String] = {
-    if(config_string.length > 4) Some(config_string(4)) else None
+    if(config_string.length > 3) Some(config_string(3)) else None
+  }
+
+  def maxMessages() : Int = {
+    if(config_string.length > 4) config_string(4).toInt else 0
   }
 
   def groupId() : String = {
